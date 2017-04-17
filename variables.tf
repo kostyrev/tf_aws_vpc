@@ -2,6 +2,10 @@ variable "name" {}
 
 variable "cidr" {}
 
+variable "region" {
+  type = "string"
+}
+
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC."
   default     = []
@@ -18,11 +22,6 @@ variable "database_subnets" {
   default     = []
 }
 
-variable "azs" {
-  description = "A list of Availability zones in the region"
-  default     = []
-}
-
 variable "enable_dns_hostnames" {
   description = "should be true if you want to use private DNS within the VPC"
   default     = false
@@ -35,6 +34,11 @@ variable "enable_dns_support" {
 
 variable "enable_nat_gateway" {
   description = "should be true if you want to provision NAT Gateways for each of your private networks"
+  default     = false
+}
+
+variable "create_database_subnets" {
+  description = "should be false if you do not want to create subnets for databases"
   default     = false
 }
 
