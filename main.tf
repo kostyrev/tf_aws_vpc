@@ -39,7 +39,7 @@ resource "aws_route_table" "private" {
 
 resource "aws_subnet" "private" {
   vpc_id            = "${aws_vpc.mod.id}"
-  cidr_block        = "${cidrsubnet(var.cidr, 4, count.index * 1)}"
+  cidr_block        = "${cidrsubnet(var.cidr, 4, count.index)}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   count             = "${length(data.aws_availability_zones.available.names)}"
   tags              = "${merge(var.tags, map("Name", format("%s-private-%s", var.name, element(data.aws_availability_zones.available.names, count.index))))}"
@@ -47,7 +47,7 @@ resource "aws_subnet" "private" {
 
 resource "aws_subnet" "public" {
   vpc_id            = "${aws_vpc.mod.id}"
-  cidr_block        = "${cidrsubnet(var.cidr, 4, count.index + 3)}"
+  cidr_block        = "${cidrsubnet(var.cidr, 4, count.index + length(data.aws_availability_zones.available.names))}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   count             = "${length(data.aws_availability_zones.available.names)}"
   tags              = "${merge(var.tags, map("Name", format("%s-public-%s", var.name, element(data.aws_availability_zones.available.names, count.index))))}"
@@ -57,7 +57,7 @@ resource "aws_subnet" "public" {
 
 resource "aws_subnet" "database" {
   vpc_id            = "${aws_vpc.mod.id}"
-  cidr_block        = "${cidrsubnet(var.cidr, 4, count.index + 6)}"
+  cidr_block        = "${cidrsubnet(var.cidr, 4, count.index + length(data.aws_availability_zones.available.names) + length(data.aws_availability_zones.available.names))}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   count             = "${length(data.aws_availability_zones.available.names) * var.create_database_subnets}"
   tags              = "${merge(var.tags, map("Name", format("%s-database-%s", var.name, element(data.aws_availability_zones.available.names, count.index))))}"
